@@ -21,5 +21,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('restaurant/', include('restaurant.urls')),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('restaurant/', include('restaurant.urls')),  # restaurant app's URLs
+    path('', include('restaurant.urls')),  # Redirect root URL to restaurant app
+]
