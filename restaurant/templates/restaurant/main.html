@@ -1,0 +1,20 @@
+{% extends 'restaurant/base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Our Restaurant{% endblock %}
+
+{% block content %}
+<h2>Welcome to Our Restaurant</h2>
+<p>We serve delicious food in a cozy atmosphere.</p>
+
+<h3>Location</h3>
+<p>123 Main Street, Cityville, State 12345</p>
+
+<h3>Hours of Operation</h3>
+<ul>
+    <li>Monday - Friday: 11:00 AM - 10:00 PM</li>
+    <li>Saturday - Sunday: 10:00 AM - 11:00 PM</li>
+</ul>
+
+<img src="{% static 'restaurant/images/restaurant.jpg' %}" alt="Restaurant Interior">
+{% endblock %}
