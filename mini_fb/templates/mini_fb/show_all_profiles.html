@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>All Profiles</h1>
-<ul>
-    {% for profile in profiles %}
-    <li>
-        <img src="{{ profile.image_url }}" alt="Profile Image">
-        <h2>{{ profile.firstName }} {{ profile.lastName }}</h2>
-        <p>City: {{ profile.city }}</p>
-        <p>Email: {{ profile.email }}</p>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <h1>All Profiles</h1>
+    <ul class="profile-list">
+        {% for profile in profiles %}
+        <li class="profile-card">
+            <img class="profile-image" src="{{ profile.image_url }}" alt="Profile Image">
+            <div class="profile-info">
+                <h2 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h2>
+                <p class="profile-details">City: {{ profile.city }}</p>
+                <p class="profile-details">Email: {{ profile.email }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% endblock %}
