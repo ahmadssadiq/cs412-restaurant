@@ -58,9 +58,7 @@ ROOT_URLCONF = "cs412.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [
-            BASE_DIR / "templates"
-        ],  # BASE_DIR should point to the root of your project
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

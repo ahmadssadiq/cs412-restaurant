@@ -5,12 +5,14 @@
     <ul class="profile-list">
         {% for profile in profiles %}
         <li class="profile-card">
-            <img class="profile-image" src="{{ profile.image_url }}" alt="Profile Image">
-            <div class="profile-info">
-                <h2 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h2>
-                <p class="profile-details">City: {{ profile.city }}</p>
-                <p class="profile-details">Email: {{ profile.email }}</p>
-            </div>
+            <a href="{% url 'show_profile' profile.pk %}">
+                <img class="profile-image" src="{{ profile.image_url }}" alt="Profile Image">
+                <div class="profile-info">
+                    <h2 class="profile-name">{{ profile.first_name }} {{ profile.last_name }}</h2>
+                </div>
+            </a>
+            <p class="profile-details">City: {{ profile.city }}</p>
+            <p class="profile-details">Email: {{ profile.email }}</p>
         </li>
         {% endfor %}
     </ul>

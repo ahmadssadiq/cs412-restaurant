@@ -1,0 +1,24 @@
+{% extends 'mini_fb/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>{{ profile.first_name }} {{ profile.last_name }}</h1>
+    <img src="{{ profile.image_url }}" alt="Profile Image" class="profile-image-large">
+    <p>City: {{ profile.city }}</p>
+    <p>Email: {{ profile.email }}</p>
+
+    <!-- Add the link to post a new status -->
+    <a href="{% url 'create_status' profile.pk %}" class="btn btn-primary">Post a new status</a>
+
+    <h2>Status Messages:</h2>
+    {% if status_messages %}
+    <ul>
+        {% for message in status_messages %}
+        <li>{{ message.message }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No status messages</p>
+    {% endif %}
+</div>
+{% endblock %}
