@@ -16,3 +16,9 @@ class CreateStatusMessageForm(forms.ModelForm):
     def form_valid(self, form):
         form.instance.profile = Profile.objects.get(pk=self.kwargs["pk"])
         return super().form_valid(form)
+
+
+class UpdateProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["birth_date", "city", "email", "bio"]

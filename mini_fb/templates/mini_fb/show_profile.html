@@ -7,6 +7,9 @@
     <p>City: {{ profile.city }}</p>
     <p>Email: {{ profile.email }}</p>
 
+    <!-- Add the link to update the profile -->
+    <a href="{% url 'update_profile' profile.pk %}">Update Profile</a>
+
     <!-- Add the link to post a new status -->
     <a href="{% url 'create_status' profile.pk %}" class="btn btn-primary">Post a new status</a>
 
@@ -15,6 +18,11 @@
     {% for status in status_messages %}
     <div>
         <p>{{ status.message }}</p>
+
+        <!-- Add delete link for the status message -->
+        <a href="{% url 'delete_status' status.pk %}">Delete</a>
+
+        <!-- Display images related to the status message -->
         {% for img in status.get_images %}
         <img src="{{ img.image_file.url }}" alt="Status Image" width="200">
         {% endfor %}

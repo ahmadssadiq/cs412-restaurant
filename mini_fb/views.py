@@ -1,8 +1,9 @@
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import Profile, StatusMessage
 from .forms import CreateProfileForm, CreateStatusMessageForm
 from django.shortcuts import get_object_or_404
+from django.views.generic.edit import UpdateView
 
 
 # Existing views
@@ -62,3 +63,21 @@ class CreateStatusMessageView(CreateView):
     def get_success_url(self):
         # After posting a status, redirect to the profile page
         return reverse("show_profile", kwargs={"pk": self.kwargs["pk"]})
+
+
+class UpdateProfileView(UpdateView):
+    model = Profile
+    form_class = UpdateProfileForm
+    template_name = "mini_fb/update_profile_form.html"
+
+    def get_success_url(self):
+        return reverse("show_profile", kwargs={"pk": self.object.pk})
+
+
+class DeleteStatusMessageView(DeleteView):
+    model = StatusMessage
+    template_name = "mini_fb/delete_status_form.html"
+    context_object_name = "status_message"
+
+    def get_success_url(self):
+        return reverse("show_profile", kwargs={"pk": self.object.profile.pk})
