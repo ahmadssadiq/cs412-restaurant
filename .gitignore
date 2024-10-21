@@ -1,0 +1,16 @@
+# Ignore the virtual environment folder
+venv/
+.venv/
+
+# Ignore environment configuration files
+*.env
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore Pipenv files if you're not using them
+Pipfile.lock
