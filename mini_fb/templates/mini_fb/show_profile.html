@@ -15,6 +15,7 @@
     {% for status in status_messages %}
     <div class="status-message">
         <p>{{ status.message }}</p>
+        <small>Posted on: {{ status.timestamp|date:"F j, Y, g:i a" }}</small>
         <a href="{% url 'delete_status' status.pk %}" class="btn">Delete</a>
         {% for img in status.get_images %}
         <img src="{{ img.image_file.url }}" alt="Status Image">
