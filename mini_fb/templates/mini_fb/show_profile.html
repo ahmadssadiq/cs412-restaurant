@@ -12,11 +12,14 @@
 
     <h2>Status Messages:</h2>
     {% if status_messages %}
-    <ul>
-        {% for message in status_messages %}
-        <li>{{ message.message }}</li>
+    {% for status in status_messages %}
+    <div>
+        <p>{{ status.message }}</p>
+        {% for img in status.get_images %}
+        <img src="{{ img.image_file.url }}" alt="Status Image" width="200">
         {% endfor %}
-    </ul>
+    </div>
+    {% endfor %}
     {% else %}
     <p>No status messages</p>
     {% endif %}

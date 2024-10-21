@@ -2,9 +2,11 @@
 
 {% block content %}
 <h2>Post a New Status Message</h2>
-<form method="post">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Post Status</button>
+    <label for="image_files">Upload Image(s):</label>
+    <input type="file" name="files" multiple>
+    <button type="submit">Submit</button>
 </form>
 {% endblock %}

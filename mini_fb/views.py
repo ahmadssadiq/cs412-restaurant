@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView
 from .models import Profile, StatusMessage
 from .forms import CreateProfileForm, CreateStatusMessageForm
+from django.shortcuts import get_object_or_404
 
 
 # Existing views
@@ -38,9 +39,18 @@ class CreateStatusMessageView(CreateView):
     template_name = "mini_fb/create_status_form.html"
 
     def form_valid(self, form):
+        # Save the status message
+        sm = form.save(commit=False)
+
         # Attach the Profile object to the status message before saving
-        profile = Profile.objects.get(pk=self.kwargs["pk"])
-        form.instance.profile = profile
+        sm.profile = Profile.objects.get(pk=self.kwargs["pk"])
+        sm.save()
+
+        # Handle image files
+        files = self.request.FILES.getlist("files")
+        for file in files:
+            Image.objects.create(image_file=file, status_message=sm)
+
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
