@@ -7,7 +7,7 @@ class Profile(models.Model):
     last_name = models.CharField(max_length=50)
     city = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
-    image_url = models.URLField(blank=True)  # Optional field for the profile image URL
+    image_url = models.URLField(blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

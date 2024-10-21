@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import Profile, StatusMessage
-from .forms import CreateProfileForm, CreateStatusMessageForm
+from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 from django.shortcuts import get_object_or_404
 from django.views.generic.edit import UpdateView
 
