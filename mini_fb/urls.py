@@ -7,6 +7,7 @@ from .views import (
     UpdateProfileView,
     DeleteStatusMessageView,
     CreateFriendView,
+    ShowNewsFeedView,
 )
 
 urlpatterns = [

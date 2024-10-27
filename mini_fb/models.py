@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 
 
+from django.db import models
+from django.utils import timezone
+
+
 class Profile(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -17,15 +21,17 @@ class Profile(models.Model):
 
     def add_friend(self, other):
         if self == other:
-            return 
+            return
 
         if not Friend.objects.filter(profile1=self, profile2=other).exists() and not Friend.objects.filter(profile1=other, profile2=self).exists():
             Friend.objects.create(profile1=self, profile2=other)
-    
-     def get_news_feed(self):
-        friends = self.get_friends()
-        return StatusMessage.objects.filter(profile__in=friends).order_by('-timestamp')
 
+    def get_news_feed(self):
+        own_statuses = StatusMessage.objects.filter(profile=self)
+        friend_statuses = StatusMessage.objects.filter(profile__in=self.get_friends())
+        all_statuses = own_statuses.union(friend_statuses).order_by('-timestamp')
+        
+        return all_statuses
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

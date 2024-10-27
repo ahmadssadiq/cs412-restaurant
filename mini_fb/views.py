@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import Profile, StatusMessage, Profile
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
 from django.shortcuts import get_object_or_404, redirect
@@ -105,8 +105,11 @@ class CreateFriendView(View):
 class ShowNewsFeedView(DetailView):
     model = Profile
     template_name = "mini_fb/news_feed.html"
+    context_object_name = "profile"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['news_feed'] = self.object.get_news_feed()
+        profile = self.get_object()
+        # Fetching the news feed for the profile
+        context['news_feed'] = profile.get_news_feed()
         return context
