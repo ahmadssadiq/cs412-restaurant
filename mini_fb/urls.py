@@ -6,6 +6,7 @@ from .views import (
     CreateStatusMessageView,
     UpdateProfileView,
     DeleteStatusMessageView,
+    CreateFriendView,
 )
 
 urlpatterns = [
@@ -29,4 +30,6 @@ urlpatterns = [
         DeleteStatusMessageView.as_view(),
         name="delete_status",
     ),
+    path("profile/<int:pk>/add_friend/<int:other_pk>/", CreateFriendView.as_view(), name="add_friend"),
+    path("profile/<int:pk>/news_feed/", ShowNewsFeedView.as_view(), name="news_feed"),
 ]

@@ -10,6 +10,34 @@
     <a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a>
     <a href="{% url 'create_status' profile.pk %}" class="btn">Post a new status</a>
 
+    <!-- Display list of friends -->
+    <h2>Friends:</h2>
+    {% if profile.get_friends %}
+    <ul>
+        {% for friend in profile.get_friends %}
+        <li><a href="{% url 'show_profile' friend.pk %}">{{ friend.first_name }} {{ friend.last_name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No friends yet</p>
+    {% endif %}
+
+    <!-- Friend Suggestions -->
+    <h2>Friend Suggestions:</h2>
+    {% if friend_suggestions %}
+    <ul>
+        {% for other_profile in friend_suggestions %}
+        <li>
+            {{ other_profile.first_name }} {{ other_profile.last_name }}
+            <a href="{% url 'add_friend' profile.pk other_profile.pk %}" class="btn">Add Friend</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No friend suggestions available</p>
+    {% endif %}
+
+    <!-- Status Messages -->
     <h2>Status Messages:</h2>
     {% if status_messages %}
     {% for status in status_messages %}

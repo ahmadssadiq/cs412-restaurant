@@ -1,9 +1,10 @@
 from django.urls import reverse
-from django.views.generic import ListView, DetailView, CreateView, DeleteView
-from .models import Profile, StatusMessage
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, DetailView
+from .models import Profile, StatusMessage, Profile
 from .forms import CreateProfileForm, CreateStatusMessageForm, UpdateProfileForm
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic.edit import UpdateView
+from django.views import View
 
 
 # Existing views
@@ -16,10 +17,16 @@ class ShowAllProfilesView(ListView):
 class ShowProfilePageView(DetailView):
     model = Profile
     template_name = "mini_fb/show_profile.html"
+    context_object_name = "profile"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["status_messages"] = StatusMessage.objects.filter(profile=self.object)
+        # Fetching the friends of the current profile
+        profile = self.get_object()
+        # Example of obtaining friend suggestions (you may refine this logic)
+        context['friend_suggestions'] = Profile.objects.exclude(
+            pk__in=[friend.pk for friend in profile.get_friends()]
+        ).exclude(pk=profile.pk)
         return context
 
 
@@ -81,3 +88,25 @@ class DeleteStatusMessageView(DeleteView):
 
     def get_success_url(self):
         return reverse("show_profile", kwargs={"pk": self.object.profile.pk})
+
+class CreateFriendView(View):
+    def dispatch(self, request, *args, **kwargs):
+        # Get the two profiles involved in the friendship
+        profile = get_object_or_404(Profile, pk=self.kwargs['pk'])
+        other_profile = get_object_or_404(Profile, pk=self.kwargs['other_pk'])
+
+        # Check if the profiles are not the same (self-friending is not allowed)
+        if profile != other_profile:
+            profile.add_friend(other_profile)
+
+        # Redirect to the profile page after adding the friend
+        return redirect('show_profile', pk=profile.pk)
+
+class ShowNewsFeedView(DetailView):
+    model = Profile
+    template_name = "mini_fb/news_feed.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['news_feed'] = self.object.get_news_feed()
+        return context
