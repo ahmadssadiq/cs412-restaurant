@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse
 from django.views.generic.edit import CreateView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CreateProfileForm
 
@@ -58,22 +58,42 @@ class CreateProfileView(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        # Make sure the indentation matches the class's indentation style
         form = self.get_form()
         user_creation_form = UserCreationForm(request.POST)
         self.object = None
 
         if form.is_valid() and user_creation_form.is_valid():
             user = user_creation_form.save()
+            print(f"Creating user: {user.username}, ID: {user.id}")
+
+            # Check if a profile already exists for this user
+            if Profile.objects.filter(user=user).exists():
+                # Return with an error message if a profile already exists
+                return self.render_to_response(
+                    self.get_context_data(
+                        form=form,
+                        user_creation_form=user_creation_form,
+                        error="A profile already exists for this user."
+                    )
+                )
+
+            # Create a new profile if it doesn't exist
             profile = form.save(commit=False)
             profile.user = user
             profile.save()
             return redirect('show_profile', pk=profile.pk)
         else:
+            # Log errors for debugging purposes
             print("Form is not valid")
             print("Profile form errors:", form.errors)
             print("User creation form errors:", user_creation_form.errors)
-            return self.render_to_response(self.get_context_data(form=form, user_creation_form=user_creation_form))
+            
+            # Return the form with validation errors
+            return self.render_to_response(
+                self.get_context_data(form=form, user_creation_form=user_creation_form)
+            )
+
+
 class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     model = StatusMessage
     form_class = CreateStatusMessageForm
