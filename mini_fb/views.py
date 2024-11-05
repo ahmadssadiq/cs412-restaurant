@@ -174,3 +174,14 @@ class ShowNewsFeedView(LoginRequiredMixin, DetailView):
         # Fetching the news feed for the profile
         context['news_feed'] = profile.get_news_feed()
         return context
+
+class FriendSuggestionsView(ListView):
+    model = Profile
+    template_name = "mini_fb/friend_suggestions.html"
+    context_object_name = "friend_suggestions"
+
+    def get_queryset(self):
+        current_profile = self.request.user.profile
+        return Profile.objects.exclude(id=current_profile.id).exclude(
+            id__in=[friend.id for friend in current_profile.get_friends()]
+        )
