@@ -1,1 +1,15 @@
 https://blooming-harbor-98680-e12f7654877b.herokuapp.com/mini_fb/
+
+
+I am getting this error however my urls.py is perfectly fine and has all of these things.
+'
+Attempting to import `mini_fb.urls`.
+dir(mini_fb.urls) = ['CreateFriendView', 'CreateProfileView', 'CreateStatusMessageView', 'DeleteStatusMessageView', 'FriendSuggestionsView', 'ShowAllProfilesView', 'ShowNewsFeedView', 'ShowProfilePageView', 'UpdateProfileView', '__builtins__', '__cached__', '__doc__', '__file__', '__loader__', '__name__', '__package__', '__spec__', 'auth_views', 'include', 'path', 'urlpatterns']
+Found urlpatterns: [<URLPattern '' [name='show_all_profiles']>, <URLPattern 'profile/<int:pk>/' [name='show_profile']>, <URLPattern 'create_profile/' [name='create_profile']>, <URLPattern 'profile/<int:pk>/create_status/' [name='create_status']>, <URLPattern 'profile/<int:pk>/update/' [name='update_profile']>, <URLPattern 'status/<int:pk>/delete/' [name='delete_status']>, <URLPattern 'profile/<int:pk>/add_friend/<int:other_pk>/' [name='add_friend']>, <URLPattern 'profile/<int:pk>/news_feed/' [name='news_feed']>, <URLPattern 'profile/<int:pk>/friend_suggestions/' [name='friend_suggestions']>, <URLPattern 'login/' [name='login']>, <URLPattern 'logout/' [name='logout']>]
+URL patterns_found=['', 'profile/<int:pk>/', 'create_profile/', 'profile/<int:pk>/create_status/', 'profile/<int:pk>/update/', 'status/<int:pk>/delete/', 'profile/<int:pk>/add_friend/<int:other_pk>/', 'profile/<int:pk>/news_feed/', 'profile/<int:pk>/friend_suggestions/', 'login/', 'logout/']
+We expected a URL pattern for 'status/create_status', but did not find it.
+We expected a URL pattern for 'profile/update', but did not find it.
+We expected a URL pattern for 'profile/friend_suggestions', but did not find it.
+We expected a URL pattern for 'profile/news_feed', but did not find it.
+We expected a URL pattern for 'profile/add_friend/<int:other_pk>', but did not find it.
+'
