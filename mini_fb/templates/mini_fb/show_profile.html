@@ -7,8 +7,11 @@
     <p class="profile-details">City: {{ profile.city }}</p>
     <p class="profile-details">Email: {{ profile.email }}</p>
 
+    <!-- Check if the user is authenticated and owns the profile -->
+    {% if request.user.is_authenticated and request.user == profile.user %}
     <a href="{% url 'update_profile' profile.pk %}" class="btn">Update Profile</a>
     <a href="{% url 'create_status' profile.pk %}" class="btn">Post a new status</a>
+    {% endif %}
     <a href="{% url 'news_feed' profile.pk %}" class="btn">View News Feed</a>
 
     <!-- Display list of friends -->

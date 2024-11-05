@@ -11,13 +11,34 @@
 
 <body>
     <header>
-        <h1>Mini Facebook</h1>
+        {% if request.user.is_authenticated %}
+        <!-- Show Logout button -->
+        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Logout</button>
+        </form>
+
+        <!-- Show 'My Profile' button -->
+        {% with request.user.profile as user_profile %}
+        {% if user_profile %}
+        <a href="{% url 'show_profile' user_profile.pk %}" class="btn btn-primary">My Profile</a>
+        {% endif %}
+        {% endwith %}
+
+        <!-- Always show 'Profiles' button for authenticated users -->
+        <a href="{% url 'show_all_profiles' %}" class="btn btn-primary">Profiles</a>
+
+        {% else %}
+        <!-- Show 'Login' button -->
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+
+        <!-- Show 'Create Profile' button -->
+        <a href="{% url 'create_profile' %}" class="btn btn-primary">Create Profile</a>
+
+        <!-- Show 'Profiles' button -->
+        <a href="{% url 'show_all_profiles' %}" class="btn btn-primary">Profiles</a>
+        {% endif %}
     </header>
-
-    <nav>
-        <a href="{% url 'show_all_profiles' %}">Profiles</a>
-    </nav>
-
     <main>
         {% block content %}
         {% endblock %}

@@ -2,9 +2,6 @@
 
 {% block content %}
 <div class="container">
-    <div style="text-align: right; margin-top: 20px;">
-        <a href="{% url 'create_profile' %}" class="btn btn-primary">Create New Profile</a>
-    </div>
     <h1>All Profiles</h1>
     <ul class="profile-list">
         {% for profile in profiles %}

@@ -1,12 +1,23 @@
 {% extends 'mini_fb/base.html' %}
 
 {% block content %}
-<div class="container">
-    <h1>Create New Profile</h1>
-    <form method="post">
-        {% csrf_token %}
+<h2>Create Profile</h2>
+<form method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>User Account Details</legend>
+        {{ user_creation_form.as_p }} <!-- Ensure these fields are rendered -->
+    </fieldset>
+    <fieldset>
+        <legend>Profile Details</legend>
         {{ form.as_p }}
-        <button type="submit">Create Profile</button>
-    </form>
-</div>
+    </fieldset>
+    {% if form.errors or user_creation_form.errors %}
+    <div class="error-messages">
+        {{ form.non_field_errors }}
+        {{ user_creation_form.non_field_errors }}
+    </div>
+    {% endif %}
+    <button type="submit">Create Profile</button>
+</form>
 {% endblock %}

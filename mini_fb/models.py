@@ -1,17 +1,14 @@
 from django.db import models
 from django.utils import timezone
-
-
-from django.db import models
-from django.utils import timezone
-
+from django.contrib.auth.models import User
 
 class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')  # Added related_name
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     city = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
-    image_url = models.URLField(blank=True)
+    image_url = models.URLField(max_length=300, blank=True)  # Increased max_length as needed
 
     def get_friends(self):
         friends_1 = Friend.objects.filter(profile1=self).values_list('profile2', flat=True)
@@ -22,7 +19,6 @@ class Profile(models.Model):
     def add_friend(self, other):
         if self == other:
             return
-
         if not Friend.objects.filter(profile1=self, profile2=other).exists() and not Friend.objects.filter(profile1=other, profile2=self).exists():
             Friend.objects.create(profile1=self, profile2=other)
 
@@ -30,12 +26,10 @@ class Profile(models.Model):
         own_statuses = StatusMessage.objects.filter(profile=self)
         friend_statuses = StatusMessage.objects.filter(profile__in=self.get_friends())
         all_statuses = own_statuses.union(friend_statuses).order_by('-timestamp')
-        
         return all_statuses
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
 
 class StatusMessage(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
