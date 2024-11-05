@@ -58,9 +58,10 @@ class CreateProfileView(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        # Make sure the indentation matches the class's indentation style
         form = self.get_form()
         user_creation_form = UserCreationForm(request.POST)
-        self.object = None  # Define to prevent errors with `self.object`
+        self.object = None
 
         if form.is_valid() and user_creation_form.is_valid():
             user = user_creation_form.save()
@@ -72,9 +73,7 @@ class CreateProfileView(CreateView):
             print("Form is not valid")
             print("Profile form errors:", form.errors)
             print("User creation form errors:", user_creation_form.errors)
-            # Render the form with errors if validation fails
             return self.render_to_response(self.get_context_data(form=form, user_creation_form=user_creation_form))
-
 class CreateStatusMessageView(LoginRequiredMixin, CreateView):
     model = StatusMessage
     form_class = CreateStatusMessageForm
