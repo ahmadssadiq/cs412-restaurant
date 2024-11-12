@@ -1,25 +1,26 @@
+<!-- voter_analytics/templates/voter_analytics/base.html -->
 {% load static %}
-<!DOCTYPE html>
 <html>
 
 <head>
-    <title>{% block title %}Voter Analytics{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <title>Voter Analytics</title>
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
 </head>
 
 <body>
     <header>
         <h1>Voter Analytics</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'voters' %}">voters</a></li>
+                <li><a href="{% url 'graphs' %}">graphs</a></li>
+            </ul>
+        </nav>
     </header>
-    <nav>
-        <ul>
-            <li><a href="{% url 'voters' %}">Voter List</a></li>
-            <li><a href="{% url 'graphs' %}">Graphs</a></li>
-        </ul>
-    </nav>
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+
+    {% block content %}
+    {% endblock %}
+
 </body>
 
 </html>

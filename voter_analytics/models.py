@@ -1,4 +1,3 @@
-# voter_analytics/models.py
 from django.db import models
 import csv
 from datetime import datetime
@@ -8,56 +7,83 @@ from .constants import PARTY_AFFILIATION_MAP
 
 
 class Voter(models.Model):
-    last_name = models.CharField(max_length=100)
-    first_name = models.CharField(max_length=100)
-    street_number = models.CharField(max_length=10)
-    street_name = models.CharField(max_length=100)
-    apartment_number = models.CharField(max_length=10, blank=True, null=True)
-    zip_code = models.CharField(max_length=10)
+    last_name = models.TextField()
+    first_name = models.TextField()
+    street_number = models.IntegerField()
+    street_name = models.TextField()
+    apartment_number = models.TextField(default="N/A", blank=True)
+    zip_code = models.TextField()
     date_of_birth = models.DateField()
+
     date_of_registration = models.DateField()
-    party_affiliation = models.CharField(max_length=50)
-    precinct_number = models.CharField(max_length=10)
-    v20state = models.BooleanField(default=False)
-    v21town = models.BooleanField(default=False)
-    v21primary = models.BooleanField(default=False)
-    v22general = models.BooleanField(default=False)
-    v23town = models.BooleanField(default=False)
-    voter_score = models.IntegerField()
+    party_affiliation = models.CharField(max_length=2)
+    precinct_number = models.TextField()
+
+    v20state = models.TextField()
+    v21town = models.TextField()
+    v21primary = models.TextField()
+    v22general = models.TextField()
+    v23town = models.TextField()
+
+    voter_score = models.IntegerField(default=0)
 
     def __str__(self):
+        """return a string representation of this model instance"""
         return f"{self.first_name} {self.last_name}"
 
 
 def load_data():
-    file_path = os.path.join(settings.BASE_DIR, "newton_voters.csv")
-    with open(file_path, newline="", encoding="utf-8") as csvfile:
-        reader = csv.DictReader(csvfile)
-        voters = []
-        for row in reader:
-            abbreviation = row["Party Affiliation"].strip()
-            full_party_name = PARTY_AFFILIATION_MAP.get(abbreviation, "Unknown")
-            voter = Voter(
-                last_name=row["Last Name"],
-                first_name=row["First Name"],
-                street_number=row["Residential Address - Street Number"],
-                street_name=row["Residential Address - Street Name"],
-                apartment_number=row.get("Residential Address - Apartment Number", ""),
-                zip_code=row["Residential Address - Zip Code"],
-                date_of_birth=datetime.strptime(
-                    row["Date of Birth"], "%Y-%m-%d"
-                ).date(),
-                date_of_registration=datetime.strptime(
-                    row["Date of Registration"], "%Y-%m-%d"
-                ).date(),
-                party_affiliation=full_party_name,
-                precinct_number=row["Precinct Number"],
-                v20state=row["v20state"].strip().lower() == "true",
-                v21town=row["v21town"].strip().lower() == "true",
-                v21primary=row["v21primary"].strip().lower() == "true",
-                v22general=row["v22general"].strip().lower() == "true",
-                v23town=row["v23town"].strip().lower() == "true",
-                voter_score=int(row["voter_score"]),
-            )
-            voters.append(voter)
-        Voter.objects.bulk_create(voters)
+    """Load data records from a CSV file into model instances."""
+
+    # delete all records: clear out the database:
+    Voter.objects.all().delete()
+
+    # open the file for reading:
+    filename = "/Users/ahmadsadiq/Documents/cs412-restaurant/newton_voters.csv"
+    with open(filename) as f:
+        headers = f.readline()  # read/discard the headers
+
+        # loop to read all the lines in the file
+        for line in f:
+            try:
+                fields = line.split(",")  # create a list of fields
+
+                # parse date fields
+                dob = (
+                    datetime.strptime(fields[7], "%Y-%m-%d").date()
+                    if fields[7]
+                    else None
+                )
+                dor = (
+                    datetime.strptime(fields[8], "%Y-%m-%d").date()
+                    if fields[8]
+                    else None
+                )
+
+                # create a new instance of Voter object with this record from CSV
+                voter = Voter(
+                    first_name=fields[2],
+                    last_name=fields[1],
+                    street_number=int(fields[3]) if fields[3].isdigit() else None,
+                    street_name=fields[4],
+                    apartment_number=fields[5] if fields[5] else None,
+                    zip_code=fields[6],
+                    date_of_birth=dob,
+                    date_of_registration=dor,
+                    party_affiliation=fields[9].strip(),
+                    precinct_number=fields[10],
+                    v20state=fields[11],
+                    v21town=fields[12],
+                    v21primary=fields[13],
+                    v22general=fields[14],
+                    v23town=fields[15],
+                    voter_score=(
+                        int(fields[16].strip()) if fields[16].strip().isdigit() else 0
+                    ),
+                )
+
+                voter.save()  # save this instance to the database
+                print(f"Created voter: {voter}")
+
+            except Exception as e:
+                print(f"Exception on {fields}: {e}")

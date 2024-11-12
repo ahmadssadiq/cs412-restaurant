@@ -1,28 +1,47 @@
-{% extends "voter_analytics/base.html" %}
-
+<!-- voter_analytics/templates/voter_analytics/voter_detail.html -->
+{% extends 'voter_analytics/base.html' %}
 {% block content %}
-<h1>Voter Details</h1>
-<p><strong>First Name:</strong> {{ voter.first_name }}</p>
-<p><strong>Last Name:</strong> {{ voter.last_name }}</p>
-<p><strong>Address:</strong> {{ voter.street_number }} {{ voter.street_name }}{% if voter.apartment_number %} Apt {{
-    voter.apartment_number }}{% endif %}, {{ voter.zip_code }}</p>
-<p><strong>Date of Birth:</strong> {{ voter.date_of_birth }}</p>
-<p><strong>Date of Registration:</strong> {{ voter.date_of_registration }}</p>
-<p><strong>Party Affiliation:</strong> {{ voter.party_affiliation }}</p>
-<p><strong>Precinct Number:</strong> {{ voter.precinct_number }}</p>
-<p><strong>Voter Score:</strong> {{ voter.voter_score }}</p>
-<p><strong>Participation in Elections:</strong></p>
-<ul>
-    <li>2020 State: {{ voter.v20state }}</li>
-    <li>2021 Town: {{ voter.v21town }}</li>
-    <li>2021 Primary: {{ voter.v21primary }}</li>
-    <li>2022 General: {{ voter.v22general }}</li>
-    <li>2023 Town: {{ voter.v23town }}</li>
-</ul>
-<p>
-    <a href="https://maps.google.com/?q={{ voter.street_number }} {{ voter.street_name }}, {{ voter.zip_code }}"
-        target="_blank">
-        View Address on Google Maps
-    </a>
-</p>
+
+<div class="container">
+    <h1>showing voter info for {{v.first_name}} {{v.last_name}}</h1>
+    <table>
+        <tr>
+            <th>name</th>
+            <th>street address</th>
+            <th>apt. number (optional)</th>
+            <th>zip code</th>
+            <th>date of birth/th>
+            <th>date of registration</th>
+            <th>party affiliation</th>
+            <th>precinct number</th>
+            <th>v20state</th>
+            <th>v21town</th>
+            <th>v21primary</th>
+            <th>v22general</th>
+            <th>v23town</th>
+            <th>voter score</th>
+        </tr>
+
+        <tr>
+            <td>{{v.first_name}} {{v.last_name}}</td>
+            <td>{{v.street_num}} {{v.street_name}}</td>
+            <td>{{v.apt_num}}</td>
+            <td>{{v.zip}}</td>
+            <td>{{v.dob}}</td>
+            <td>{{v.dor}}</td>
+            <td>{{v.party}}</td>
+            <td>{{v.p_num}}</td>
+            <td>{{v.v20state}}</td>
+            <td>{{v.v21town}}</td>
+            <td>{{v.v21primary}}</td>
+            <td>{{v.v22general}}</td>
+            <td>{{v.v23town}}</td>
+            <td>{{v.v_score}}</td>
+        </tr>
+    </table>
+
+    <h3>view address: <a
+            href="https://www.google.com/maps/search/?api=1&query={{v.street_num}},{{v.street_name}},{{v.zip}}"
+            target="_blank">{{v.street_num}} {{v.street_name}}, {{v.zip}}</a></h3>
+</div>
 {% endblock %}

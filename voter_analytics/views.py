@@ -1,135 +1,114 @@
 # voter_analytics/views.py
+from django.shortcuts import render
+from typing import Any
+from django.db.models.query import QuerySet
 from django.views.generic import ListView, DetailView
 from .models import Voter
-from .forms import VoterFilterForm
-import plotly.express as px
-from django.db.models import Count
+import plotly
+import plotly.graph_objs as go
 
 
-class VoterListView(ListView):
+class VotersListView(ListView):
+    """view to show a list of voters"""
+
+    template_name = "voter_analytics/voters.html"
     model = Voter
-    template_name = "voter_analytics/voter_list.html"
     context_object_name = "voters"
     paginate_by = 100
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        form = VoterFilterForm(self.request.GET)
-        if form.is_valid():
-            if form.cleaned_data["party_affiliation"]:
-                queryset = queryset.filter(
-                    party_affiliation=form.cleaned_data["party_affiliation"]
-                )
-            min_dob = self.request.GET.get("min_dob")
-            if min_dob:
-                queryset = queryset.filter(
-                    date_of_birth__gte=form.cleaned_data["min_dob"]
-                )
-            if form.cleaned_data["max_dob"]:
-                queryset = queryset.filter(
-                    date_of_birth__lte=form.cleaned_data["max_dob"]
-                )
-            if form.cleaned_data["voter_score"]:
-                queryset = queryset.filter(voter_score=form.cleaned_data["voter_score"])
-            if form.cleaned_data["v20state"]:
-                queryset = queryset.filter(v20state=True)
-            if form.cleaned_data["v21town"]:
-                queryset = queryset.filter(v21town=True)
-            if form.cleaned_data["v21primary"]:
-                queryset = queryset.filter(v21primary=True)
-            if form.cleaned_data["v22general"]:
-                queryset = queryset.filter(v22general=True)
-            if form.cleaned_data["v23town"]:
-                queryset = queryset.filter(v23town=True)
-        return queryset
+    def get_queryset(self) -> QuerySet[Any]:
+        """limit the voters to a small number of records"""
+        qs = Voter.objects.all()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form"] = VoterFilterForm(self.request.GET)
-        return context
+        # handle search party parameters:
+        if "party_affiliation" in self.request.GET:
+            party = self.request.GET["party_affiliation"]
+            qs = qs.filter(party_affiliation__icontains=party)
+
+        # handle search min. dob year parameters:
+        if "min_dob_year" in self.request.GET:
+            min_year = self.request.GET["min_dob_year"] + "-01-01"
+            qs = qs.filter(date_of_birth__gte=min_year)
+
+        # handle search max. dob year parameters:
+        if "max_dob_year" in self.request.GET:
+            max_year = self.request.GET["max_dob_year"] + "-01-01"
+            qs = qs.filter(date_of_birth__lte=max_year)
+
+        # handle search voter score parameters:
+        if "voter_score" in self.request.GET:
+            score = self.request.GET["voter_score"]
+            qs = qs.filter(voter_score=score)
+
+        # handle participation options:
+        for field in ["v20state", "v21town", "v21primary", "v22general", "v23town"]:
+            if field in self.request.GET:
+                qs = qs.filter(**{field: "TRUE"})
+
+        return qs
 
 
 class VoterDetailView(DetailView):
-    model = Voter
+    """view to show detail page for one voter"""
+
     template_name = "voter_analytics/voter_detail.html"
-    context_object_name = "voter"
-
-
-class VoterGraphView(ListView):
     model = Voter
-    template_name = "voter_analytics/graphs.html"
-    context_object_name = "voters"
+    context_object_name = "v"
 
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        form = VoterFilterForm(self.request.GET)
-        if form.is_valid():
-            if form.cleaned_data["party_affiliation"]:
-                queryset = queryset.filter(
-                    party_affiliation__in=form.cleaned_data["party_affiliation"]
-                )
-            if form.cleaned_data["min_dob"]:
-                queryset = queryset.filter(
-                    date_of_birth__year__gte=form.cleaned_data["min_dob"].year
-                )
-            if form.cleaned_data["max_dob"]:
-                queryset = queryset.filter(
-                    date_of_birth__year__lte=form.cleaned_data["max_dob"].year
-                )
-            if form.cleaned_data["voter_score"]:
-                queryset = queryset.filter(voter_score=form.cleaned_data["voter_score"])
-            for election in [
-                "v20state",
-                "v21town",
-                "v21primary",
-                "v22general",
-                "v23town",
-            ]:
-                if form.cleaned_data[election]:
-                    queryset = queryset.filter(**{election: True})
-        return queryset
+
+class GraphsListView(ListView):
+    """view to show a list of graphs displaying voter information"""
+
+    template_name = "voter_analytics/graphs.html"
+    model = Voter
+    context_object_name = "v"
 
     def get_context_data(self, **kwargs):
+        """provide context variables for use in this template"""
         context = super().get_context_data(**kwargs)
-        voters = self.get_queryset()
+        all_voters = Voter.objects.all()
 
-        birth_years = voters.values_list("date_of_birth__year", flat=True)
-        fig_birth_year = px.histogram(
-            x=birth_years,
-            nbins=50,
-            labels={"x": "Year of Birth", "y": "Count"},
-            title="Distribution of Voters by Year of Birth",
-        )
-        context["graph_birth_year"] = fig_birth_year.to_html(full_html=False)
-
-        party_counts = voters.values("party_affiliation").annotate(count=Count("id"))
-        fig_party = px.pie(
-            names=[entry["party_affiliation"] for entry in party_counts],
-            values=[entry["count"] for entry in party_counts],
-            title="Distribution of Voters by Party Affiliation",
-        )
-        context["graph_party"] = fig_party.to_html(full_html=False)
-
-        election_data = [
-            {"election": "2020 State", "count": voters.filter(v20state=True).count()},
-            {"election": "2021 Town", "count": voters.filter(v21town=True).count()},
-            {
-                "election": "2021 Primary",
-                "count": voters.filter(v21primary=True).count(),
-            },
-            {
-                "election": "2022 General",
-                "count": voters.filter(v22general=True).count(),
-            },
-            {"election": "2023 Town", "count": voters.filter(v23town=True).count()},
+        # Voter distribution by birth year
+        birth_years = [
+            voter.date_of_birth.year for voter in all_voters if voter.date_of_birth
         ]
-        fig_election = px.bar(
-            x=[entry["election"] for entry in election_data],
-            y=[entry["count"] for entry in election_data],
-            labels={"x": "Election", "y": "Voter Count"},
-            title="Voter Participation in Elections",
-        )
-        context["graph_election"] = fig_election.to_html(full_html=False)
+        years = list(set(birth_years))
+        dist_year = [birth_years.count(year) for year in years]
 
-        context["form"] = VoterFilterForm(self.request.GET)
+        fig = go.Figure(data=[go.Bar(x=years, y=dist_year)])
+        fig.update_layout(
+            title=f"Voter distribution by birth year (total={sum(dist_year)})"
+        )
+        context["graph_birth_year"] = plotly.offline.plot(
+            fig, auto_open=False, output_type="div"
+        )
+
+        # Party affiliation distribution
+        parties = list(set(v.party_affiliation for v in all_voters))
+        dist_party = [
+            all_voters.filter(party_affiliation=party).count() for party in parties
+        ]
+
+        fig = go.Pie(labels=parties, values=dist_party)
+        context["graph_party"] = plotly.offline.plot(
+            {
+                "data": [fig],
+                "layout_title_text": "Voter distribution by party affiliation",
+            },
+            auto_open=False,
+            output_type="div",
+        )
+
+        # Vote counts by election
+        vote_fields = ["v20state", "v21town", "v21primary", "v22general", "v23town"]
+        dist_vote = [
+            all_voters.filter(**{field: "TRUE"}).count() for field in vote_fields
+        ]
+
+        fig = go.Figure(data=[go.Bar(x=vote_fields, y=dist_vote)])
+        fig.update_layout(title=f"Vote counts by election (total={sum(dist_vote)})")
+        context["graph_votes"] = plotly.offline.plot(
+            fig, auto_open=False, output_type="div"
+        )
+
         return context

@@ -1,19 +1,36 @@
-{% extends "voter_analytics/base.html" %}
-
+<!-- voter_analytics/templates/voter_analytics/graphs.html -->
+{% extends 'voter_analytics/base.html' %}
 {% block content %}
-<h1>Voter Data Graphs</h1>
 
-<form method="get">
-    {{ form.as_p }}
-    <button type="submit">Filter</button>
-</form>
+<div class="container">
+    {% include 'voter_analytics/search.html' %}
+</div>
 
-<h2>Distribution of Voters by Year of Birth</h2>
-{{ graph_birth_year|safe }}
+<div class="container">
+    <div class="row">
+        <p>
+            {{graph_birth_year|safe}}
+        </p>
 
-<h2>Distribution of Voters by Party Affiliation</h2>
-{{ graph_party|safe }}
+    </div>
+</div>
 
-<h2>Voter Participation in Elections</h2>
-{{ graph_election|safe }}
+<div class="container">
+    <div class="row">
+        <p>
+            {{graph_party|safe}}
+        </p>
+
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <p>
+            {{graph_votes|safe}}
+        </p>
+
+    </div>
+</div>
+
 {% endblock %}

@@ -1,8 +1,10 @@
+# voter_analytics/urls.py
 from django.urls import path
-from .views import VoterListView, VoterDetailView, VoterGraphView
+from .views import *
 
 urlpatterns = [
-    path("", VoterListView.as_view(), name="voters"),
-    path("voter/<int:pk>/", VoterDetailView.as_view(), name="voter"),
-    path("graphs/", VoterGraphView.as_view(), name="graphs"),
+    path(r"", VotersListView.as_view(), name="home"),
+    path(r"voters", VotersListView.as_view(), name="voters"),
+    path(r"voter/<int:pk>", VoterDetailView.as_view(), name="voter_detail"),
+    path(r"graphs", GraphsListView.as_view(), name="graphs"),
 ]
