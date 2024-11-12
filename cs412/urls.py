@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("restaurant/", include("restaurant.urls")),  # Existing restaurant URLs
-    path("mini_fb/", include("mini_fb.urls")),  # New mini_fb URLs
+    path("restaurant/", include("restaurant.urls")),
+    path("mini_fb/", include("mini_fb.urls")),
+    path("voter_analytics/", include("voter_analytics.urls")),
 ]
