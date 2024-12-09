@@ -1,0 +1,30 @@
+{#
+File: quiz_results.html
+Author: Ahmad Sadiq (U37206345)
+Date: 12/4/24
+
+Description: This template displays the results of a completed quiz. It shows the quiz title, the user's score,
+and the total number of questions in the quiz. A button is provided to return to the homepage.
+
+Key Features:
+1. Extends the base template for consistent application layout.
+2. Dynamically renders quiz details and the user's score using context variables.
+3. Includes a navigation button to return to the home page.
+#}
+
+{% extends 'quiz_app/base.html' %}
+
+{% block title %}
+Quiz Results
+{% endblock title %}
+
+{% block body %}
+<div class="containerquiz">
+    <h2>Quiz Results</h2>
+    <p><strong>Quiz:</strong> {{ quiz.title }}</p>
+    <p><strong>Your Score:</strong> {{ score }} out of {{ total }}</p>
+
+    <!-- Return to home button -->
+    <a href="{% url 'index' %}" class="btn btn-primary">Return to Home</a>
+</div>
+{% endblock body %}

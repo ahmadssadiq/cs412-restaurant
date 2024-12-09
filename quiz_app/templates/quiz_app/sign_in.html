@@ -1,0 +1,33 @@
+{#
+File: sign_in.html
+Author: Ahmad Sadiq (U37206345)
+Date: 12/4/24
+
+Description: This template renders the sign-in page for the Quiz App. It provides a form for users to
+log in using their credentials. The form includes fields for username and password, as well as CSRF
+protection. A link to the sign-up page is also provided for users who don't already have an account.
+
+Key Features:
+1. Extends the base template for consistent layout and styling across the app.
+2. Dynamically renders a Django authentication form using the context variable `form`.
+3. Includes CSRF protection for secure form submission.
+4. Provides a sign-up link for users who need to register.
+#}
+
+{% extends 'quiz_app/base.html' %}
+
+{% block title %}
+Sign In
+{% endblock title %}
+
+{% block body %}
+<div class="containerquiz">
+    <h2>Sign In</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary btn-centered">Sign In</button>
+    </form>
+    <p>Don't have an account? <a href="{% url 'sign_up' %}">Sign Up</a></p>
+</div>
+{% endblock body %}

@@ -1,0 +1,67 @@
+<!--
+File: base.html
+Author: Ahmad Sadiq U37206345
+Date: 12/4/24
+
+Description: This base template defines the overall structure for the Quiz App's web pages.
+It includes the necessary HTML5 boilerplate, links to external stylesheets, and sets up
+a navigation bar that adjusts based on user authentication status. The template utilizes
+Django's templating language to allow for dynamic content rendering and template inheritance.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Quiz App{% endblock title %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <!-- Left-aligned brand -->
+            <a class="navbar-brand" href="{% url 'index' %}">
+                <span class="logo-icon">❖</span> QuizIt
+            </a>
+
+            <!-- Right-aligned navigation links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto"> <!-- "ms-auto" pushes content to the right -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <span class="nav-link text-white">Welcome, {{ user.username }}</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sign_out' %}">Sign Out</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create_quiz' %}">Create Quiz</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sign_in' %}">Sign In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sign_up' %}">Sign Up</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container mt-4">
+        {% block body %}{% endblock body %}
+    </main>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        &copy; 2024 Quiz App. All rights reserved.
+    </footer>
+
+</body>
+
+</html>

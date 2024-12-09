@@ -1,0 +1,119 @@
+# File: create_quiz.html #}
+{# Author: Ahmad Sadiq (U37206345) #}
+{# Date: 12/4/24 #}
+{# Description: This template provides the interface for users to create a new quiz. It includes sections for entering
+quiz details, adding questions, and specifying answers for each question. Users can dynamically add multiple questions
+and corresponding answers. #}
+
+
+{% extends 'quiz_app/base.html' %}
+
+{% block title %}
+Create Quiz
+{% endblock title %}
+
+{% block body %}
+<div class="containerquiz">
+    <h2>Create a Quiz</h2>
+    <form method="post" id="quiz-form">
+        {% csrf_token %}
+
+        <!-- Quiz Details -->
+        <h3>Quiz Details</h3>
+        {{ quiz_form.as_p }}
+
+        <!-- Questions -->
+        <h3>Questions</h3>
+        <div id="questions-container">
+            <!-- Initial Question Template -->
+            <div class="question" data-question-index="0">
+                <h4>Question 1</h4>
+                <label for="question-0-text">Question:</label>
+                <input type="text" name="questions[0][text]" id="question-0-text" required>
+
+                <h5>Answers</h5>
+                <div class="answers" data-question-index="0">
+                    <!-- Initial Answer Template for the First Question -->
+                    <div class="answer" data-answer-index="0">
+                        <label for="question-0-answer-0-text">Answer:</label>
+                        <input type="text" name="questions[0][answers][0][text]" id="question-0-answer-0-text" required>
+                        <label>
+                            <input type="checkbox" name="questions[0][answers][0][is_correct]">
+                            Is Correct
+                        </label>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary add-answer" data-question-index="0">
+                    Add Another Answer
+                </button>
+            </div>
+        </div>
+        <!-- Button to Add Another Question -->
+        <button type="button" id="add-question" class="btn btn-primary">Add Another Question</button>
+        <!-- Submit Button to Create the Quiz -->
+        <button type="submit" class="btn btn-success">Create Quiz</button>
+    </form>
+</div>
+
+<!-- JavaScript to Handle Dynamic Addition of Questions and Answers -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let questionIndex = 1;
+
+        const questionsContainer = document.getElementById('questions-container');
+        const addQuestionButton = document.getElementById('add-question');
+
+        // Function to add a new question
+        function addQuestion() {
+            const questionHtml = `
+                <div class="question" data-question-index="${questionIndex}">
+                    <h4>Question ${questionIndex + 1}</h4>
+                    <label for="question-${questionIndex}-text">Question:</label>
+                    <input type="text" name="questions[${questionIndex}][text]" id="question-${questionIndex}-text" required>
+
+                    <h5>Answers</h5>
+                    <div class="answers" data-question-index="${questionIndex}">
+                        <div class="answer" data-answer-index="0">
+                            <label for="question-${questionIndex}-answer-0-text">Answer:</label>
+                            <input type="text" name="questions[${questionIndex}][answers][0][text]" id="question-${questionIndex}-answer-0-text" required>
+                            <label>
+                                <input type="checkbox" name="questions[${questionIndex}][answers][0][is_correct]">
+                                Is Correct
+                            </label>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary add-answer" data-question-index="${questionIndex}">
+                        Add Another Answer
+                    </button>
+                </div>
+            `;
+            questionsContainer.insertAdjacentHTML('beforeend', questionHtml);
+            questionIndex++;
+        }
+
+        // Add question handler
+        addQuestionButton.addEventListener('click', addQuestion);
+
+        // Delegate click event for adding answers
+        questionsContainer.addEventListener('click', function (event) {
+            if (event.target.classList.contains('add-answer')) {
+                const questionIndex = event.target.getAttribute('data-question-index');
+                const answersDiv = document.querySelector(`.answers[data-question-index="${questionIndex}"]`);
+                const answerIndex = answersDiv.children.length;
+
+                const answerHtml = `
+                    <div class="answer" data-answer-index="${answerIndex}">
+                        <label for="question-${questionIndex}-answer-${answerIndex}-text">Answer:</label>
+                        <input type="text" name="questions[${questionIndex}][answers][${answerIndex}][text]" id="question-${questionIndex}-answer-${answerIndex}-text" required>
+                        <label>
+                            <input type="checkbox" name="questions[${questionIndex}][answers][${answerIndex}][is_correct]">
+                            Is Correct
+                        </label>
+                    </div>
+                `;
+                answersDiv.insertAdjacentHTML('beforeend', answerHtml);
+            }
+        });
+    });
+</script>
+{% endblock body %}

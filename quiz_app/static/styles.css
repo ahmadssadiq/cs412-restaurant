@@ -1,0 +1,482 @@
+:root {
+    --primary-color: #18181b;
+    --accent-color: #3b82f6;
+    --background-color: #fafafa;
+    --text-color: #27272a;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding-top: 60px;
+    /* Ensures content is not hidden under the navbar */
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    position: fixed;
+    width: 100%;
+    height: 17%;
+    z-index: 1000;
+    top: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.navbar-nav {
+    margin-left: auto;
+    /* Ensures the nav items are pushed to the right */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    /* Adds spacing between the nav items */
+}
+
+.navbar-brand {
+    display: flex;
+    color: #060652;
+    align-items: center;
+    font-size: 2rem;
+    /* Bigger font for emphasis */
+    font-weight: 700;
+    /* Extra bold for prominence */
+    color: var(--accent-color);
+    /* Accent color for the logo */
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    /* Adds slight spacing for a clean look */
+    transition: transform 0.3s ease, color 0.3s ease;
+    /* Smooth hover effect */
+}
+
+.navbar-brand:hover {
+    color: #2563eb;
+    /* Slightly darker accent color on hover */
+    transform: scale(1.05);
+    /* Slight enlargement for hover interaction */
+}
+
+.logo-icon {
+    font-size: 1.5rem;
+    /* Icon size slightly smaller than text */
+    margin-right: 0.5rem;
+    /* Adds spacing between icon and text */
+    color: #fa1587;
+    /* Golden yellow for the icon */
+    animation: spin 4s linear infinite;
+    /* Subtle spinning effect */
+}
+
+/* Optional Animation for Icon */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.navbar-nav .nav-item .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: color 0.2s ease;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+    color: var(--accent-color);
+}
+
+.container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Quiz List */
+.list-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.list-group-item {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+    transform: translateY(-1px);
+}
+
+.btn-success {
+    background-color: #28a745;
+    /* Green background */
+    color: white;
+    /* White text */
+    border: none;
+    /* Remove default border */
+    border-radius: 8px;
+    /* Rounded corners */
+    padding: 0.75rem 1.5rem;
+    /* Adjust padding for better size */
+    font-size: 1rem;
+    /* Set a standard font size */
+    font-weight: bold;
+    /* Make the text bold */
+    text-transform: uppercase;
+    /* Uppercase text for emphasis */
+    transition: all 0.3s ease;
+    /* Smooth hover effect */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Add a subtle shadow */
+    cursor: pointer;
+    /* Pointer cursor for interactivity */
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    /* Slightly darker green on hover */
+    transform: translateY(-2px);
+    /* Lift the button on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    /* Enhance the shadow */
+}
+
+.btn-success:active {
+    background-color: #1e7e34;
+    /* Even darker green when active */
+    transform: translateY(0);
+    /* Return to original position */
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    /* Reduce shadow */
+}
+
+.btn-centered {
+    display: block;
+    /* Ensures the button takes its own line */
+    margin: 0 auto;
+    /* Centers the button horizontally */
+    text-align: center;
+    /* Ensures text inside is centered */
+    padding: 0.75rem 1.5rem;
+    /* Adds better spacing inside the button */
+    font-size: 1rem;
+    /* Adjusts the font size for consistency */
+    border-radius: 8px;
+    /* Adds a modern rounded look */
+    background-color: var(--accent-color);
+    /* Uses your accent color */
+    color: white;
+    border: none;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-centered:hover {
+    background-color: #2563eb;
+    /* Darker hover color */
+    transform: translateY(-2px);
+    /* Adds a subtle lift effect */
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Adjustments for mobile screens */
+@media (max-width: 768px) {
+    body {
+        padding-top: 56px;
+    }
+
+    .navbar {
+        height: auto;
+    }
+
+    .navbar-nav .nav-item .nav-link {
+        padding: 0.75rem;
+    }
+
+    .list-group-item {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+/* Center the form in the page */
+.containersign {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 5rem;
+    /* Adds space from the navbar */
+}
+
+/* Headings */
+.containersign h2 {
+    margin-bottom: 1.5rem;
+    color: var(--primary-color);
+}
+
+/* Form Styling */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Input Fields */
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: var(--accent-color);
+}
+
+/* Buttons */
+button[type="submit"] {
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #2563eb;
+    transform: translateY(-2px);
+}
+
+/* Links */
+p a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Play Quiz Container */
+.containerquiz {
+    max-width: 800px;
+    /* Increased width for better question layout */
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    /* Keeps text alignment for readability */
+    margin-top: 5rem;
+    /* Adds space from the navbar */
+}
+
+/* Quiz Title and Description */
+.containerquiz h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    text-align: center;
+    /* Center the title */
+}
+
+.containerquiz p {
+    margin-bottom: 2rem;
+    text-align: center;
+    /* Center the description */
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+/* Question Styling */
+.containerquiz .question {
+    margin-bottom: 2rem;
+}
+
+.containerquiz .question h4 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+    color: var(--primary-color);
+}
+
+.containerquiz .question p {
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+/* Radio Button Styling */
+.containerquiz .form-check {
+    margin-bottom: 0.5rem;
+}
+
+.containerquiz .form-check-input {
+    margin-right: 10px;
+}
+
+.containerquiz .form-check-label {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+/* Add Another Answer Button */
+.btn-secondary.add-answer {
+    background-color: #137bd6;
+    /* Light gray background */
+    color: white;
+    /* White text */
+    border: none;
+    border-radius: 8px;
+    /* Rounded corners */
+    font-size: 0.9rem;
+    /* Slightly smaller font size */
+    padding: 0.5rem 1rem;
+    /* Padding for a modern look */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    transition: all 0.3s ease;
+    /* Smooth hover effect */
+}
+
+.btn-secondary.add-answer:hover {
+    background-color: #309bed;
+    /* Darker gray on hover */
+    transform: translateY(-2px);
+    /* Lift effect on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    /* Enhanced shadow */
+}
+
+.btn-secondary.add-answer:active {
+    background-color: #115395;
+    /* Even darker gray when active */
+    transform: translateY(0);
+    /* Return to original position */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+/* Add Another Question Button */
+.btn-primary {
+    background-color: #034790;
+    /* Blue background */
+    color: white;
+    /* White text */
+    border: none;
+    border-radius: 8px;
+    /* Rounded corners */
+    font-size: 1rem;
+    /* Standard font size */
+    padding: 0.75rem 1.5rem;
+    /* Larger padding for emphasis */
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+    transition: all 0.3s ease;
+    /* Smooth hover effect */
+}
+
+.btn-primary:hover {
+    background-color: #01264d;
+    /* Darker blue on hover */
+    transform: translateY(-2px);
+    /* Lift effect on hover */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    /* Enhanced shadow */
+}
+
+.btn-primary:active {
+    background-color: #004085;
+    /* Even darker blue when active */
+    transform: translateY(0);
+    /* Return to original position */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Subtle shadow */
+}
+
+/* Create Quiz Button */
+.btn-success {
+    background-color: #17ae3a;
+    /* Green background */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    /* Slightly darker green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-success:active {
+    background-color: #1e7e34;
+    /* Even darker green when active */
+    transform: translateY(0);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,55 @@
+{#
+File: play_quiz.html
+Author: Ahmad Sadiq (U37206345)
+Date: 12/4/24
+
+Description: This template renders the interface for playing a quiz. It dynamically displays the quiz title,
+description, and all associated questions and answers. Users can select one answer for each question using
+radio buttons. The form is submitted to the server for scoring the quiz.
+
+Key Features:
+1. Extends the base template for consistent layout across the application.
+2. Dynamically renders quiz details, questions, and answers using context data.
+3. Includes CSRF protection for secure form submission.
+4. Enforces one answer selection per question through required radio buttons.
+#}
+{% extends 'quiz_app/base.html' %}
+
+{% block title %}
+Play Quiz
+{% endblock title %}
+
+{% block body %}
+<div class="containerquiz">
+    <h2>{{ quiz.title }}</h2>
+    <p>{{ quiz.description }}</p>
+
+    <!-- Quiz Form -->
+    <form method="post" action="{% url 'submit_quiz' quiz.id %}">
+        {% csrf_token %}
+
+        <!-- Iterate through all questions -->
+        {% for question in questions %}
+        <div class="question">
+            <h4>Question {{ forloop.counter }}</h4>
+            <p>{{ question.text }}</p>
+
+            <!-- Iterate through the answers for this question -->
+            {% for answer in question.answers.all %}
+            <div class="form-check">
+                <input type="radio" name="question_{{ question.id }}" id="answer_{{ answer.id }}"
+                    value="{{ answer.id }}" class="form-check-input" required>
+                <label class="form-check-label" for="answer_{{ answer.id }}">
+                    {{ answer.text }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        <hr>
+        {% endfor %}
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-success btn-centered">Submit Quiz</button>
+    </form>
+</div>
+{% endblock body %}
