@@ -1,20 +1,3 @@
-{#
-File: sign_up.html
-Author: Ahmad Sadiq (U37206345)
-Date: 12/4/24
-
-Description: This template renders the sign-up page for the Quiz App. It provides a registration form
-for users to create a new account. The form includes fields for username, email, and password, as well
-as CSRF protection for secure form submission. A link to the sign-in page is provided for users who
-already have an account.
-
-Key Features:
-1. Extends the base template for consistent layout and styling across the app.
-2. Dynamically renders a Django user registration form using the context variable `form`.
-3. Includes CSRF protection for secure form submission.
-4. Provides a sign-in link for existing users.
-#}
-
 {% extends 'quiz_app/base.html' %}
 
 {% block title %}
