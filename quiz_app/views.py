@@ -32,16 +32,25 @@ from django.contrib.auth.forms import AuthenticationForm
 
 def index(request):
     """
-    Displays the list of available quizzes on the home page.
+    Displays the list of available quizzes on the home page, with optional filtering by difficulty.
     Parameters:
         request: The HTTP request object.
     Returns:
-        HttpResponse: Renders the 'index.html' template with all quizzes and the user object.
+        HttpResponse: Renders the 'index.html' template with filtered quizzes and the user object.
     """
-    quizzes = Quiz.objects.all()
+    # Get the difficulty filter from query parameters
+    difficulty = request.GET.get("difficulty")
+
+    # Filter quizzes based on difficulty, or show all quizzes if no filter is applied
+    if difficulty:
+        quizzes = Quiz.objects.filter(difficulty=difficulty)
+    else:
+        quizzes = Quiz.objects.all()
+
     context = {
         "quizzes": quizzes,
         "user": request.user,  # Pass the user object to the template
+        "selected_difficulty": difficulty,  # Pass the selected difficulty to the template
     }
     return render(request, "quiz_app/index.html", context)
 

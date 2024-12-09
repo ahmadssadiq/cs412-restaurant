@@ -4,8 +4,7 @@ Author: Ahmad Sadiq (U37206345)
 Date: 12/4/24
 
 Description: This template serves as the home page for the Quiz App. It displays a welcome message
-and lists all available quizzes retrieved from the database. Each quiz is displayed with its title,
-category, and difficulty, along with "Play", "Edit", and "Delete" buttons for each quiz.
+and lists all available quizzes retrieved from the database. Users can filter quizzes by difficulty.
 #}
 
 {% extends 'quiz_app/base.html' %}
@@ -17,6 +16,23 @@ Quiz App - Home
 {% block body %}
 <div class="container mt-5">
     <h1 class="text-center">Welcome to Quiz App</h1>
+
+    <!-- Filter by Difficulty -->
+    <div class="mt-4">
+        <h3>Filter by Difficulty</h3>
+        <div class="btn-group" role="group">
+            <a href="{% url 'index' %}"
+                class="btn {% if not selected_difficulty %}btn-secondary{% else %}btn-outline-secondary{% endif %}">All</a>
+            <a href="?difficulty=Easy"
+                class="btn {% if selected_difficulty == 'Easy' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Easy</a>
+            <a href="?difficulty=Medium"
+                class="btn {% if selected_difficulty == 'Medium' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Medium</a>
+            <a href="?difficulty=Hard"
+                class="btn {% if selected_difficulty == 'Hard' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">Hard</a>
+        </div>
+    </div>
+
+    <!-- Display Quizzes -->
     <div class="mt-4">
         <h2>Available Quizzes</h2>
         <ul class="list-group">
@@ -29,11 +45,13 @@ Quiz App - Home
                     <!-- Play Quiz Button -->
                     <a href="{% url 'play_quiz' quiz.id %}" class="btn btn-primary">Play Quiz</a>
                     <!-- Edit Quiz Button -->
-                    <a href="{% url 'edit_quiz' quiz.id %}" class="btn btn-primary">Edit</a>
+                    <a href="{% url 'edit_quiz' quiz.id %}" class="btn btn-warning">Edit</a>
                     <!-- Delete Quiz Button -->
-                    <a href="{% url 'delete_quiz' quiz.id %}" class="btn">Delete</a>
+                    <a href="{% url 'delete_quiz' quiz.id %}" class="btn btn-danger">Delete</a>
                 </div>
             </li>
+            {% empty %}
+            <li class="list-group-item text-center">No quizzes found for the selected difficulty.</li>
             {% endfor %}
         </ul>
     </div>

@@ -66,13 +66,24 @@ class CustomAuthenticationForm(AuthenticationForm):
 class QuizForm(forms.ModelForm):
     """
     Model form for creating and updating quizzes.
-
     Fields:
         - title: The title of the quiz.
         - description: A brief description of the quiz.
         - category: The category to which the quiz belongs (e.g., Science, Math).
         - difficulty: The difficulty level of the quiz (e.g., Easy, Medium, Hard).
     """
+
+    DIFFICULTY_CHOICES = [
+        ("Easy", "Easy"),
+        ("Medium", "Medium"),
+        ("Hard", "Hard"),
+    ]
+
+    difficulty = forms.ChoiceField(
+        choices=DIFFICULTY_CHOICES,
+        required=True,
+        help_text="Choose the difficulty level (case-sensitive)",
+    )
 
     class Meta:
         model = Quiz
