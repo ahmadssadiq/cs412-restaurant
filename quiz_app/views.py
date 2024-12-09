@@ -271,3 +271,31 @@ def quiz_results(request, quiz_id, score, total):
         "total": total,
     }
     return render(request, "quiz_app/quiz_results.html", context)
+
+
+@login_required
+def edit_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id, owner=request.user)
+
+    if request.method == "POST":
+        quiz_form = QuizForm(request.POST, instance=quiz)
+        if quiz_form.is_valid():
+            quiz_form.save()
+            return redirect("index")  # Redirect to the homepage after editing
+    else:
+        quiz_form = QuizForm(instance=quiz)
+
+    context = {"quiz_form": quiz_form, "quiz": quiz}
+    return render(request, "quiz_app/edit_quiz.html", context)
+
+
+@login_required
+def delete_quiz(request, quiz_id):
+    quiz = get_object_or_404(Quiz, id=quiz_id, owner=request.user)
+
+    if request.method == "POST":
+        quiz.delete()
+        return redirect("index")  # Redirect to the homepage after deletion
+
+    context = {"quiz": quiz}
+    return render(request, "quiz_app/delete_quiz.html", context)

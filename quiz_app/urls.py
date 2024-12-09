@@ -18,6 +18,8 @@ URL Patterns:
 7. check_answer: URL to check the user's answer for a specific question, identified by question_id.
 8. submit_quiz: URL to submit answers for a quiz, identified by quiz_id.
 9. quiz_results: URL to display quiz results, showing the quiz_id, the user's score, and the total score.
+10. edit_quiz: URL to edit quizzes, identified by quiz_id.
+11. delete_quiz: URL to delete quizzes, identified by quiz_id.
 """
 
 from django.urls import path
@@ -31,6 +33,8 @@ from .views import (
     index,
     submit_quiz,
     quiz_results,
+    edit_quiz,
+    delete_quiz,
 )
 
 # Define urlpatterns to map URLs to their corresponding view functions
@@ -54,4 +58,8 @@ urlpatterns = [
         quiz_results,
         name="quiz_results",
     ),  # Display quiz results
+    path("edit_quiz/<int:quiz_id>/", edit_quiz, name="edit_quiz"),  # edits quizzes
+    path(
+        "delete_quiz/<int:quiz_id>/", delete_quiz, name="delete_quiz"
+    ),  # deletez quizzes.
 ]
