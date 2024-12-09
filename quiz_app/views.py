@@ -9,7 +9,7 @@ Each view corresponds to a specific functionality, such as user authentication, 
 playing a quiz, and displaying results.
 
 Views in this file:
-1. index: Displays the list of available quizzes on the home page.
+1. index: Displays the list of available quizzes on the home page, with optional filtering by difficulty.
 2. sign_up: Handles user registration.
 3. sign_in: Handles user login.
 4. sign_out: Logs out the user and redirects to the login page.
@@ -18,6 +18,8 @@ Views in this file:
 7. check_answer: Verifies if a selected answer is correct and returns the result as JSON.
 8. submit_quiz: Processes user-submitted answers, calculates the score, and saves the attempt.
 9. quiz_results: Displays the results of a quiz attempt.
+10. edit_quiz: Allows authenticated users to edit an existing quiz.
+11. delete_quiz: Allows authenticated users to delete an existing quiz.
 """
 
 from django.contrib.auth.models import User
@@ -284,27 +286,53 @@ def quiz_results(request, quiz_id, score, total):
 
 @login_required
 def edit_quiz(request, quiz_id):
+    """
+    Allows authenticated users to edit an existing quiz.
+    Parameters:
+        request: The HTTP request object.
+        quiz_id: The ID of the quiz to be edited.
+    Returns:
+        HttpResponse: Renders the 'edit_quiz.html' template with the quiz form pre-filled
+        with the current quiz data, or redirects to 'index' upon successful edit.
+    """
+    # Fetch the quiz object owned by the current user or return 404 if not found
     quiz = get_object_or_404(Quiz, id=quiz_id, owner=request.user)
 
     if request.method == "POST":
+        # Bind the form with POST data and the existing quiz instance
         quiz_form = QuizForm(request.POST, instance=quiz)
         if quiz_form.is_valid():
+            # Save the updated quiz details
             quiz_form.save()
             return redirect("index")  # Redirect to the homepage after editing
     else:
+        # Load the form with the current quiz instance for GET requests
         quiz_form = QuizForm(instance=quiz)
 
+    # Render the edit page with the quiz form
     context = {"quiz_form": quiz_form, "quiz": quiz}
     return render(request, "quiz_app/edit_quiz.html", context)
 
 
 @login_required
 def delete_quiz(request, quiz_id):
+    """
+    Allows authenticated users to delete an existing quiz.
+    Parameters:
+        request: The HTTP request object.
+        quiz_id: The ID of the quiz to be deleted.
+    Returns:
+        HttpResponseRedirect: Redirects to the 'index' page upon successful deletion.
+        HttpResponse: Renders the 'delete_quiz.html' template to confirm the deletion.
+    """
+    # Fetch the quiz object owned by the current user or return 404 if not found
     quiz = get_object_or_404(Quiz, id=quiz_id, owner=request.user)
 
     if request.method == "POST":
+        # Delete the quiz if the user confirms the action
         quiz.delete()
         return redirect("index")  # Redirect to the homepage after deletion
 
+    # Render the confirmation page for quiz deletion
     context = {"quiz": quiz}
     return render(request, "quiz_app/delete_quiz.html", context)
